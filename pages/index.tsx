@@ -1,15 +1,22 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
+import { sanityClient } from '../sanity';
+import { Post } from '../typings';
 
-const Home: NextPage = () => {
+interface Props {
+    posts: Post[]
+}
+
+const Home: NextPage = ({posts}: any) => {
+    console.log(posts)
   return (
     <div className="flex min-h-screen flex-col items-center justify-center py-2">
       <Head>
         <title>Create Next App</title>
         <link rel="icon" href="/favicon.ico" />
       </Head>
-
+			
       <main className="flex w-full flex-1 flex-col items-center justify-center px-20 text-center">
         <h1 className="text-6xl font-bold">
           Welcome to{' '}
@@ -19,10 +26,7 @@ const Home: NextPage = () => {
         </h1>
 
         <p className="mt-3 text-2xl">
-          Get started by editing{' '}
-          <code className="rounded-md bg-gray-100 p-3 font-mono text-lg">
-            pages/index.tsx
-          </code>
+            <strong>Title:</strong> {posts[0].title}
         </p>
 
         <div className="mt-6 flex max-w-4xl flex-wrap items-center justify-around sm:w-full">
@@ -84,3 +88,15 @@ const Home: NextPage = () => {
 }
 
 export default Home
+
+export const getServerSideProps = async () => {
+    const query = `*[_type == "post"]`;
+
+    const posts = await sanityClient.fetch(query);
+    
+    return {
+        props: {
+            posts
+        }
+    }
+}
