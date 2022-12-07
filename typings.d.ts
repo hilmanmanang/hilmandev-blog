@@ -7,4 +7,7 @@ export interface Post {
         name: string,
         image: string
     },
+    slug: {
+        current: string
+    }
 }
